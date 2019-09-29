@@ -44,6 +44,12 @@
                 <span>流量统计</span>
               </template>
             </el-menu-item>
+            <el-menu-item index="4">
+              <template slot="title">
+                <i class="el-icon-s-data"></i>
+                <span>Echarts</span>
+              </template>
+            </el-menu-item>
           </el-menu>
         </div>
         <div class="layout-user">
@@ -95,6 +101,32 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@media screen and (min-width: 1000px) {
+  .el-main {
+    position: absolute;
+    left: 0;
+    right: 0;
+    min-height: 900px;
+    margin-top: 52px;
+    overflow: hidden;
+    background: #f5f7f9;
+    border-radius: 4px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .el-main {
+    position: absolute;
+    left: 0;
+    right: 0;
+    min-height: 800px;
+    margin-top: 52px;
+    overflow: hidden;
+    background: #f5f7f9;
+    border-radius: 4px;
+  }
+}
+
 .el-header {
   background-color: #545c64;
   z-index: 99;
@@ -109,17 +141,6 @@ export default {
 
 .el-dropdown-link {
   cursor: pointer;
-}
-
-.el-main {
-  position: absolute;
-  left: 0;
-  right: 0;
-  min-height: 800px;
-  margin-top: 52px;
-  overflow: hidden;
-  background: #f5f7f9;
-  border-radius: 4px;
 }
 
 .layout {

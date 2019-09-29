@@ -6,10 +6,8 @@ import store from './common/store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 
-import ECharts from 'vue-echarts'
-import 'echarts/lib/chart/line'
-
-Vue.component('chart', ECharts)
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);

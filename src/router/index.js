@@ -35,6 +35,7 @@ export default new Router({
             name: 'packet_analysis',
             path: '/packet/analysis',
             component: packet_analysis
-        }
+        },
+
     ]
 })

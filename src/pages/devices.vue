@@ -6,15 +6,44 @@
         <el-breadcrumb-item>设备信息</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="layout-content">内容</div>
+    <div class="layout-content">
+      <span>{{host.name}}</span>
+      <div v-for="item in host.devices" :key="item.name">
+        <span>{{item.name}}</span>
+        <span>{{item.description}}</span>
+        <div v-for="addr in item.addresses" :key="addr.ip">
+          <span>{{addr.ip}}</span>
+          <span>{{addr.subnet_mask}}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+import device from "@/common/api/modules/device";
+
 export default {
   name: "device",
   data() {
     return {};
+  },
+  computed: {
+    ...mapState({
+      host(state) {
+        return state.device;
+      }
+    })
+  },
+  methods: {
+    init() {
+      this.getDeviceInfo();
+    },
+    ...mapActions(["getDeviceInfo"])
+  },
+  mounted() {
+    this.init();
   }
 };
 </script>
