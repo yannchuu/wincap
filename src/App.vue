@@ -44,12 +44,6 @@
                 <span>流量统计</span>
               </template>
             </el-menu-item>
-            <el-menu-item index="4">
-              <template slot="title">
-                <i class="el-icon-s-data"></i>
-                <span>Echarts</span>
-              </template>
-            </el-menu-item>
           </el-menu>
         </div>
         <div class="layout-user">

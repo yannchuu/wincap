@@ -1,7 +1,7 @@
 import device from '@/common/api/modules/device'
 
 const state = {
-    device: {}
+    device: []
 };
 
 const actions = {
@@ -22,6 +22,7 @@ const actions = {
 const mutations = {
     getDeviceInfo: (state, result) => {
         state.device = JSON.parse(result)
+        console.log(state.device)
     }
 };
 

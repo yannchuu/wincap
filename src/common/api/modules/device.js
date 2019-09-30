@@ -10,7 +10,6 @@ export default {
                 ...payload,
             },
         });
-        console.log(res)
         return res.data;
     },
 }

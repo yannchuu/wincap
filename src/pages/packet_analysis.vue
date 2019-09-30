@@ -21,15 +21,31 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.layout {
-  &-breadcrumb {
-    padding: 0 0 20px 0;
+@media screen and (min-width: 1000px) {
+  .layout {
+    &-breadcrumb {
+      padding: 0 0 20px 0;
+    }
+    &-content {
+      min-height: 800px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 4px;
+    }
   }
-  &-content {
-    min-height: 700px;
-    overflow: hidden;
-    background: #fff;
-    border-radius: 4px;
+}
+
+@media screen and (max-width: 1000px) {
+  .layout {
+    &-breadcrumb {
+      padding: 0 0 20px 0;
+    }
+    &-content {
+      min-height: 700px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 4px;
+    }
   }
 }
 </style>
