@@ -5,47 +5,6 @@
         <div class="layout-logo">
           <span>Network Analysis</span>
         </div>
-        <div class="layout-nav">
-          <el-menu
-            class="el-menu-demo"
-            mode="horizontal"
-            @select="handleSelect"
-            background-color="#545c64"
-            text-color="#fff"
-            active-text-color="#ffd04b"
-          >
-            <el-menu-item index="1">
-              <template slot="title">
-                <i class="el-icon-info"></i>
-                <span>设备信息</span>
-              </template>
-            </el-menu-item>
-            <el-submenu index="2">
-              <template slot="title">
-                <i class="el-icon-menu"></i>
-                <span>我的工作台</span>
-              </template>
-              <el-menu-item index="2-1">
-                <template slot="title">
-                  <i class="el-icon-folder"></i>
-                  <span>捕获数据包</span>
-                </template>
-              </el-menu-item>
-              <el-menu-item index="2-2">
-                <template slot="title">
-                  <i class="el-icon-upload"></i>
-                  <span>统计数据包</span>
-                </template>
-              </el-menu-item>
-            </el-submenu>
-            <el-menu-item index="3">
-              <template slot="title">
-                <i class="el-icon-s-data"></i>
-                <span>流量统计</span>
-              </template>
-            </el-menu-item>
-          </el-menu>
-        </div>
         <div class="layout-user">
           <el-dropdown>
             <el-avatar
@@ -73,24 +32,7 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    handleSelect(index, indexPath) {
-      switch (index) {
-        case "1":
-          this.$router.push("/devices");
-          break;
-        case "2-1":
-          this.$router.push("/packet/catch");
-          break;
-        case "2-2":
-          this.$router.push("/packet/analysis");
-          break;
-        case "3":
-          this.$router.push("/netflow");
-          break;
-      }
-    }
-  }
+  methods: {}
 };
 </script>
 

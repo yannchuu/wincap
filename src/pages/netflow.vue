@@ -3,7 +3,7 @@
     <div class="layout-breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>流量统计</el-breadcrumb-item>
+        <el-breadcrumb-item>流量分析</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="layout-content">内容</div>

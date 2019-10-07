@@ -10,43 +10,27 @@
       <div class="layout-table"></div>
       <div class="layout-device">
         <el-card class="box-card" shadow="hover">
-          <el-collapse accordion>
-            <el-collapse-item v-for="(device,i) in hostData" :key="i">
-              <template slot="title">
-                <i class="el-icon-upload"></i>
-                {{device.name}}
-              </template>
-              <span>IP: {{device.ip_address}}</span>
+          <div slot="header">
+            <span>{{device}}</span>
+          </div>
+          <div class="box-card-content" v-for="(intf,i) in interfaceData" :key="i">
+            <div class="box-card-content-name">
+              <a href="javascript:viod(0)" v-on:click="packetCatch(intf.name)">{{intf.name}}</a>
+            </div>
+            <div class="box-card-content-info">
+              <span>Description: {{intf.description == ""? "无":intf.description}}</span>
               <br />
-              <span>Interfaces:</span>
-              <br />
-              <div class="device-interfaces">
-                <el-collapse>
-                  <el-collapse-item v-for="(intf,j) in device.interfaces" :key="j">
-                    <template slot="title">{{intf.name}}</template>
-                    <span>Description: {{intf.description == ""? "无":intf.description}}</span>
-                    <br />
-                    <span>Addresses:</span>
-                    <br />
-                    <div v-if="intf.addresses.length > 0">
-                      <div
-                        class="device-interfaces-addresses"
-                        v-for="(ad,k) in intf.addresses"
-                        :key="k"
-                      >
-                        <span>IP: {{ad.ip == ""? "无":ad.ip}}</span>
-                        <el-divider direction="vertical"></el-divider>
-                        <span>Subnet Mask: {{ad.subnet_mask}}</span>
-                      </div>
-                    </div>
-                    <div v-else>
-                      <span>无</span>
-                    </div>
-                  </el-collapse-item>
-                </el-collapse>
+              <div v-if="intf.addresses.length > 0">
+                <span>Addresses:</span>
+                <div v-for="(ad,k) in intf.addresses" :key="k" style="margin-left:10px;">
+                  <span>IP: {{ad.ip == ""? "无":ad.ip}}</span>
+                  <el-divider direction="vertical"></el-divider>
+                  <span>Subnet Mask: {{ad.subnet_mask}}</span>
+                </div>
               </div>
-            </el-collapse-item>
-          </el-collapse>
+            </div>
+            <el-divider></el-divider>
+          </div>
         </el-card>
       </div>
     </div>
@@ -59,16 +43,27 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "device",
   data() {
-    return {};
+    return {
+      device: this.$route.query.device
+    };
   },
   computed: {
     ...mapState({
-      hostData(state) {
-        return state.device.device;
+      interfaceData(state) {
+        let interfaces = [];
+        state.device.device.map(v => {
+          if (v.name === this.device) {
+            interfaces = v.interfaces;
+          }
+        });
+        return interfaces;
       }
     })
   },
   methods: {
+    packetCatch(intf) {
+      this.$router.push({ path: "/packet/catch", query: { interface: intf } });
+    },
     init() {
       this.getDeviceInfo();
     },
@@ -114,19 +109,23 @@ export default {
   }
 }
 
-.el-icon-upload {
-  padding: 0 8px;
-}
-
 .box-card {
   width: 600px;
+  &-content {
+    color: #555555;
+    margin: 0 0 10px;
+    &-name {
+      font: 15px Lato;
+      font-weight: bold;
+      margin: 0 0 2px;
+    }
+    &-info {
+      font: 13px Lato;
+    }
+  }
 }
 
-.device-interfaces {
-  margin-left: 13px;
-  // height: 30px !important;
-  &-addresses {
-    margin-left: 26px;
-  }
+.el-divider--horizontal {
+  margin: 20px 0;
 }
 </style>
