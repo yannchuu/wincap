@@ -12,4 +12,14 @@ export default {
         });
         return res.data;
     },
+    packetCatchInfo: async function (payload) {
+        const res = await http({
+            url: `http://49.232.16.9:8080/packetCatchInfo`,
+            method: GET,
+            data: {
+                ...payload,
+            },
+        });
+        return res.data;
+    },
 }

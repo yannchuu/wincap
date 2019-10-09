@@ -15,7 +15,7 @@
           </div>
           <div class="box-card-content" v-for="(intf,i) in interfaceData" :key="i">
             <div class="box-card-content-name">
-              <a href="javascript:viod(0)" v-on:click="packetCatch(intf.name)">{{intf.name}}</a>
+              <a href="javascript:void(0)" v-on:click="packetCatch(device,intf.name)">{{intf.name}}</a>
             </div>
             <div class="box-card-content-info">
               <span>Description: {{intf.description == ""? "无":intf.description}}</span>
@@ -61,8 +61,11 @@ export default {
     })
   },
   methods: {
-    packetCatch(intf) {
-      this.$router.push({ path: "/packet/catch", query: { interface: intf } });
+    packetCatch(device, intf) {
+      this.$router.push({
+        path: "/packet/catch",
+        query: { device: device, interface: intf }
+      });
     },
     init() {
       this.getDeviceInfo();

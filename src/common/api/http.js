@@ -9,6 +9,7 @@ const instance = axios.create({
 });
 
 instance.defaults.headers.post['Content-Type'] = 'application/json';
+instance.defaults.headers.get['Content-Type'] = 'application/json';
 
 const fetch = (options) => {
   const { method = POST, data, url, config } = options;
