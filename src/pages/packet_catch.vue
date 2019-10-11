@@ -12,14 +12,16 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>{{intf}}</span>
-            <el-button
-              type="success"
-              icon="el-icon-caret-right"
-              circle
-              style="float: right;"
-              size="mini"
-              @click="Open"
-            ></el-button>
+            <div style="float: right;">
+              <el-button type="success" icon="el-icon-caret-right" circle size="mini" @click="Open"></el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-switch-button"
+                circle
+                size="mini"
+                @click="Close"
+              ></el-button>
+            </div>
           </div>
           <el-collapse>
             <el-collapse-item
@@ -58,48 +60,58 @@ export default {
     return {
       search: "",
       device: this.$route.query.device,
-      intf: this.$route.query.interface
+      intf: this.$route.query.interface,
+      PacketData: []
     };
   },
   computed: {
     ...mapState({
-      PacketData(state) {
-        return state.device.packet.map((v, i) => {
-          return {
-            ...v,
-            id: i + 1,
-            wire: v.wire + " bytes",
-            cap: v.cap + " bytes"
-          };
-        });
-      }
+      // PacketData(state) {
+      //   return state.device.packet.map((v, i) => {
+      //     return {
+      //       ...v,
+      //       id: i + 1,
+      //       wire: v.wire + " bytes",
+      //       cap: v.cap + " bytes"
+      //     };
+      //   });
+      // }
     })
   },
   methods: {
     Open() {
       if (this.ws) {
-        return false;
+        console.log("已建立连接");
+        return;
       }
       this.ws = new WebSocket("ws://49.232.16.9:8080/packetCatchInfo");
-      this.ws.onopen = this.websocketonopen;
-      this.ws.onmessage = this.websocketonmessage;
+      let self = this;
+      this.ws.onopen = function() {
+        console.log("建立连接成功！");
+        self.ws.send(self.intf);
+      };
+      this.ws.onmessage = function(evt) {
+        console.log(evt);
+        let rsp = JSON.parse(evt.data);
+        if (rsp.errcode === 0) {
+          let obj = JSON.parse(rsp.data);
+          self.PacketData.push(obj);
+        }
+      };
+      this.ws.onclose = function(evt) {
+        console.log("连接关闭");
+        self.ws = null;
+      };
     },
-    websocketonopen() {
-      console.log("建立连接成功！");
-      this.ws.send(this.intf);
-    },
-    websocketonmessage(e) {
-      console.log(e);
-    },
-    init() {
-      let postload = { interface: this.intf };
-      this.packetCatchInfo(postload);
-    },
-    ...mapActions(["packetCatchInfo"])
+    Close() {
+      if (!this.ws) {
+        console.log("未建立连接");
+        return;
+      }
+      this.ws.close();
+    }
   },
-  mounted() {
-    // this.init();
-  }
+  mounted() {}
 };
 </script>
 
