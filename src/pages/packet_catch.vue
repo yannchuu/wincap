@@ -81,21 +81,30 @@ export default {
   methods: {
     Open() {
       if (this.ws) {
-        console.log("已建立连接");
+        this.$message.error("已建立连接");
         return;
       }
       this.ws = new WebSocket("ws://49.232.16.9:8080/packetCatchInfo");
       let self = this;
       this.ws.onopen = function() {
         console.log("建立连接成功！");
+        self.PacketData = [];
         self.ws.send(self.intf);
       };
       this.ws.onmessage = function(evt) {
-        console.log(evt);
-        let rsp = JSON.parse(evt.data);
-        if (rsp.errcode === 0) {
-          let obj = JSON.parse(rsp.data);
-          self.PacketData.push(obj);
+        if (evt.data == "pong") {
+          self.ws.send("ping");
+        } else {
+          let rsp = JSON.parse(evt.data);
+          if (rsp.errcode === 0) {
+            let obj = JSON.parse(rsp.data);
+            self.PacketData.push(obj);
+            if (self.ws.readyState === 1) {
+              self.ws.send("ping");
+            }
+          } else {
+            self.Close();
+          }
         }
       };
       this.ws.onclose = function(evt) {
@@ -105,7 +114,7 @@ export default {
     },
     Close() {
       if (!this.ws) {
-        console.log("未建立连接");
+        this.$message.error("未建立连接");
         return;
       }
       this.ws.close();
