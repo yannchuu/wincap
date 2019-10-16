@@ -7,7 +7,7 @@
       </el-breadcrumb>
     </div>
     <div class="layout-content">
-      <div class="layout-table"></div>
+      <div class="layout-myChart" ref="myChart"></div>
       <div class="layout-device">
         <el-card class="box-card" shadow="hover">
           <div slot="header">
@@ -15,7 +15,12 @@
           </div>
           <div class="box-card-content" v-for="(intf,i) in interfaceData" :key="i">
             <div class="box-card-content-name">
-              <a href="javascript:void(0)" v-on:click="packetCatch(device,intf.name)">{{intf.name}}</a>
+              <el-tooltip class="item" effect="dark" content="捕获数据包" placement="right">
+                <a
+                  href="javascript:void(0)"
+                  v-on:click="packetCatch(device,intf.name)"
+                >{{intf.name}}</a>
+              </el-tooltip>
             </div>
             <div class="box-card-content-info">
               <span>Description: {{intf.description == ""? "无":intf.description}}</span>
@@ -39,6 +44,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import api from "@/common/api/modules/device";
 
 export default {
   name: "device",
@@ -67,10 +73,98 @@ export default {
         query: { device: device, interface: intf }
       });
     },
+
     init() {
       this.getDeviceInfo();
-    },
+      var myChart = this.$echarts.init(this.$refs.myChart);
+      var option = {
+        title: {
+          text: "接口流量统计",
+          subtext: "以上数据统计截止至2019年"
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        legend: {
+          data: []
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            magicType: { show: true, type: ["line", "bar"] },
+            saveAsImage: { show: true }
+          }
+        },
+        calculable: true,
+        xAxis: [
+          //x轴(设备)
+          {
+            type: "category",
+            data: [
+              "1月",
+              "2月",
+              "3月",
+              "4月",
+              "5月",
+              "6月",
+              "7月",
+              "8月",
+              "9月",
+              "10月",
+              "11月",
+              "12月"
+            ]
+          }
+        ],
+        yAxis: [
+          //y轴
+          {
+            type: "value"
+          }
+        ],
+        series: []
+      };
+      api.getNetFlowData().then(res => {
+        if (res.errcode === 0) {
+          var netflow = JSON.parse(res.data);
+          var key = this.device;
+          option.legend.data = Object.keys(netflow.devices[key][0].interfaces);
+          netflow.devices[key].sort(function(a, b) {
+            return a.time - b.time;
+          });
 
+          for (var i in netflow.devices[key][0].interfaces) {
+            let se = {
+              name: i,
+              type: "bar",
+              data: [],
+              markPoint: {
+                data: [
+                  { type: "max", name: "最大值" },
+                  { type: "min", name: "最小值" }
+                ]
+              },
+              markLine: {
+                data: [{ type: "average", name: "平均值" }]
+              }
+            };
+            option.series.push(se);
+          }
+
+          netflow.devices[key].map(v => {
+            for (var i in v.interfaces) {
+              option.series.map(s => {
+                if (i == s.name) {
+                  s.data.push(v.interfaces[i].length);
+                }
+              });
+            }
+          });
+          myChart.setOption(option);
+        }
+      });
+      myChart.setOption(option);
+    },
     ...mapActions(["getDeviceInfo"])
   },
   mounted() {
@@ -87,6 +181,7 @@ export default {
       overflow: hidden;
       background: #fff;
       border-radius: 4px;
+      display: flex;
     }
   }
 }
@@ -98,17 +193,28 @@ export default {
       overflow: hidden;
       background: #fff;
       border-radius: 4px;
+      display: flex;
     }
   }
+}
+
+a {
+  color: #555555;
+  text-decoration: none;
 }
 
 .layout {
   &-breadcrumb {
     padding: 0 0 20px 0;
   }
+  &-myChart {
+    margin: 25px 0 20px 30px;
+    width: 910px;
+    height: 600px;
+  }
   &-device {
     position: relative;
-    margin: 20px 0 20px 5px;
+    margin: 50px 0px 20px 90px;
   }
 }
 

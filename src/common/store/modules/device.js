@@ -2,7 +2,6 @@ import device from '@/common/api/modules/device'
 
 const state = {
     device: [],
-    packet: []
 };
 
 const actions = {
@@ -18,28 +17,12 @@ const actions = {
             console.log(`${error}数据加载异常，请重试`);
         });
     },
-    packetCatchInfo({ commit }, opt) {
-        const payload = opt;
-        device.packetCatchInfo(payload).then(res => {
-            if (res.errcode === 0) {
-                commit("packetCatchInfo", res.data)
-            } else {
-                console.log('数据加载异常，请重试');
-            }
-        }).catch(error => {
-            console.log(`${error}数据加载异常，请重试`);
-        });
-    }
 };
 
 const mutations = {
     getDeviceInfo: (state, result) => {
         state.device = JSON.parse(result)
     },
-    packetCatchInfo: (state, result) => {
-        state.packet = JSON.parse(result)
-        console.log(state.packet)
-    }
 };
 
 export default {

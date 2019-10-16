@@ -12,9 +12,9 @@ export default {
         });
         return res.data;
     },
-    packetCatchInfo: async function (payload) {
+    getNetFlowData: async function (payload) {
         const res = await http({
-            url: `http://49.232.16.9:8080/packetCatchInfo`,
+            url: `http://49.232.16.9:8080/getNetFlowData`,
             method: GET,
             data: {
                 ...payload,

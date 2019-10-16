@@ -152,7 +152,7 @@ export default {
   }
   &-packet {
     position: relative;
-    margin: 20px 0 20px 5px;
+    margin: 20px 0 20px 15px;
   }
 }
 
